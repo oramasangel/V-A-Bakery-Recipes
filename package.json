@@ -1,0 +1,23 @@
+{
+  "name": "v-a-bakery-recipes",
+  "version": "1.0.0",
+  "description": "Environment for recipes, it doesn't matter the category, every recipes would be available",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js",
+    "test": "echo \"No tests specified\" && exit 0"
+  },
+  "keywords": ["recipes", "bakery", "food", "inventory"],
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^2.2.0",
+    "cors": "^2.8.5",
+    "express": "^5.1.0",
+    "multer": "^2.0.2"
+  }
+}

@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>V&A Bakery - Recetas e Inventario</title>
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🍰 V&A Bakery - Recetas e Inventario</h1>
+            <nav>
+                <button class="nav-btn active" data-section="recipes">Recetas</button>
+                <button class="nav-btn" data-section="inventory">Inventario</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- RECIPES SECTION -->
+        <section id="recipes-section" class="section active">
+            <div class="section-header">
+                <h2>Gestión de Recetas</h2>
+                <button class="btn btn-primary" id="add-recipe-btn">+ Nueva Receta</button>
+            </div>
+
+            <div class="filters">
+                <select id="category-filter" class="filter-select">
+                    <option value="">Todas las categorías</option>
+                    <option value="panaderia">Panadería</option>
+                    <option value="postres">Postres</option>
+                    <option value="comida">Comida</option>
+                    <option value="bebidas">Bebidas</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <input type="text" id="search-recipes" class="search-input" placeholder="Buscar recetas...">
+            </div>
+
+            <div id="recipes-grid" class="grid">
+                <!-- Recipes will be loaded here -->
+            </div>
+        </section>
+
+        <!-- INVENTORY SECTION -->
+        <section id="inventory-section" class="section">
+            <div class="section-header">
+                <h2>Gestión de Inventario</h2>
+                <button class="btn btn-primary" id="add-inventory-btn">+ Nuevo Item</button>
+            </div>
+
+            <div class="filters">
+                <select id="inventory-category-filter" class="filter-select">
+                    <option value="">Todas las categorías</option>
+                    <option value="ingredientes">Ingredientes</option>
+                    <option value="utensilios">Utensilios</option>
+                    <option value="empaques">Empaques</option>
+                    <option value="otros">Otros</option>
+                </select>
+                <input type="text" id="search-inventory" class="search-input" placeholder="Buscar en inventario...">
+            </div>
+
+            <div class="inventory-summary">
+                <div class="summary-card">
+                    <h3>Total Items</h3>
+                    <p id="total-items">0</p>
+                </div>
+                <div class="summary-card">
+                    <h3>Valor Total</h3>
+                    <p id="total-value">$0.00</p>
+                </div>
+            </div>
+
+            <div id="inventory-table-container">
+                <table id="inventory-table">
+                    <thead>
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Categoría</th>
+                            <th>Cantidad</th>
+                            <th>Unidad</th>
+                            <th>Precio</th>
+                            <th>Proveedor</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="inventory-tbody">
+                        <!-- Inventory items will be loaded here -->
+                    </tbody>
+                </table>
+            </div>
+        </section>
+    </main>
+
+    <!-- RECIPE MODAL -->
+    <div id="recipe-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="recipe-modal-title">Nueva Receta</h2>
+            <form id="recipe-form">
+                <input type="hidden" id="recipe-id">
+                
+                <div class="form-group">
+                    <label for="recipe-name">Nombre de la Receta *</label>
+                    <input type="text" id="recipe-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-category">Categoría *</label>
+                    <select id="recipe-category" required>
+                        <option value="">Seleccionar categoría</option>
+                        <option value="panaderia">Panadería</option>
+                        <option value="postres">Postres</option>
+                        <option value="comida">Comida</option>
+                        <option value="bebidas">Bebidas</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="recipe-servings">Porciones</label>
+                        <input type="number" id="recipe-servings" min="1" value="1">
+                    </div>
+                    <div class="form-group">
+                        <label for="recipe-prep-time">Tiempo (min)</label>
+                        <input type="number" id="recipe-prep-time" min="1">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-ingredients">Ingredientes (uno por línea) *</label>
+                    <textarea id="recipe-ingredients" rows="5" required placeholder="Ej: 2 tazas de harina&#10;1/2 taza de azúcar&#10;3 huevos"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-instructions">Instrucciones *</label>
+                    <textarea id="recipe-instructions" rows="6" required placeholder="Describe los pasos para preparar la receta..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="recipe-image">Imagen</label>
+                    <input type="file" id="recipe-image" accept="image/*">
+                    <img id="recipe-image-preview" class="image-preview" style="display:none;">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-recipe-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- INVENTORY MODAL -->
+    <div id="inventory-modal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2 id="inventory-modal-title">Nuevo Item de Inventario</h2>
+            <form id="inventory-form">
+                <input type="hidden" id="inventory-id">
+                
+                <div class="form-group">
+                    <label for="inventory-name">Nombre del Item *</label>
+                    <input type="text" id="inventory-name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="inventory-category">Categoría *</label>
+                    <select id="inventory-category" required>
+                        <option value="">Seleccionar categoría</option>
+                        <option value="ingredientes">Ingredientes</option>
+                        <option value="utensilios">Utensilios</option>
+                        <option value="empaques">Empaques</option>
+                        <option value="otros">Otros</option>
+                    </select>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="inventory-quantity">Cantidad *</label>
+                        <input type="number" id="inventory-quantity" step="0.01" min="0" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="inventory-unit">Unidad *</label>
+                        <select id="inventory-unit" required>
+                            <option value="kg">Kilogramo (kg)</option>
+                            <option value="g">Gramo (g)</option>
+                            <option value="l">Litro (l)</option>
+                            <option value="ml">Mililitro (ml)</option>
+                            <option value="unidad">Unidad</option>
+                            <option value="paquete">Paquete</option>
+                            <option value="caja">Caja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="inventory-price">Precio Unitario ($) *</label>
+                    <input type="number" id="inventory-price" step="0.01" min="0" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="inventory-supplier">Proveedor</label>
+                    <input type="text" id="inventory-supplier">
+                </div>
+
+                <div class="form-group">
+                    <label for="inventory-notes">Notas</label>
+                    <textarea id="inventory-notes" rows="3"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" id="cancel-inventory-btn">Cancelar</button>
+                    <button type="submit" class="btn btn-primary">Guardar</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- RECIPE DETAIL MODAL -->
+    <div id="recipe-detail-modal" class="modal">
+        <div class="modal-content large">
+            <span class="close">&times;</span>
+            <div id="recipe-detail-content">
+                <!-- Recipe details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/js/app.js"></script>
+</body>
+</html>
